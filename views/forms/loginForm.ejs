@@ -1,0 +1,37 @@
+<form 
+    method="POST" 
+    action="/api/signin"
+    enctype="application/x-www-form-urlencoded"
+    id="signin-main-form"
+>
+    <label 
+        for="input-login-main-page"
+    >
+        Email
+    </label>
+    <div>
+        <input 
+            id="input-login-auth-page"
+            type="email"
+            placeholder="Login email"
+            value=""
+            name="email"
+        >
+    </div>
+    <label 
+        for="input-login-main-page"
+    >
+        Password
+    </label>
+    <div>
+        <input 
+            id="input-password-auth-page"
+            type="password"
+            value=""
+            name="password"
+        >
+    </div>
+    <button id="send-auth-form-btn">Login</button>
+</form>
+
+<p>havnt account? <a href="/singup">register</a></p>

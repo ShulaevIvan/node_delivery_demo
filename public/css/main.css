@@ -1,0 +1,80 @@
+.test {
+    color: red;
+}
+.chat-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 700px;
+}
+.find-chat-main-input-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+.find-chat-main-input-wrap input {
+    max-width: 150px;
+    margin-bottom: 10px;
+}
+.chat-window-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    min-height: 400px;
+    border: 1px solid;
+}
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 67.5%;
+    max-width: 700px;
+    margin-bottom: 20px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}
+.chat-main-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.chat-keyboard-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}
+.chat-keyboard textarea {
+    width: 70%;
+    min-width: 400px;
+    min-height: 40px;
+}
+.chat-message-item {
+    margin-bottom: 10px;
+}
+.chat-keyboard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 67.5%;
+}
+.chat-send-btn-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+.chat-hidden {
+    visibility: hidden;
+}

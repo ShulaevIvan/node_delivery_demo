@@ -1,0 +1,9 @@
+<%- include('./includes/header.ejs') %>
+
+<% if(user.email) { %>
+    <p><%= user.email %></p>
+    <p><a href="/advertisments">advertisments</a></p>
+    <p><a href="/chat">chat</a></p>
+    <a href="/logout">Logout</a>
+<% } %>
+<%- include('./includes/footer.ejs') %>

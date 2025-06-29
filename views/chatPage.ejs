@@ -1,0 +1,89 @@
+<%- include('./includes/header.ejs') %>
+
+<div class="chat-wrap">
+   <div class="userInfo-wrap">
+        <h3>CurrentUser Info</h3>
+        <p>UserId: <span class="current-user-id"><%= user.userId %></span></p>
+        <p>Name: <span class="current-user-name"><%= user.name %></span></p>
+        <p>Email: <span class="current-user-email"><%= user.email %></span></p>
+        <p>ContactPhone: <span class="current-user-phone"><%= user.contactPhone %></span></p>
+        <p><span class="ws-server-url"><%= wsServerUrl %></span></p>
+   </div>
+   <div class="avalible-users">
+        <h3>Avalible Users (id):</h3>
+        <ul class="other-users">
+        </ul>
+    
+   </div>
+   <div class="find-chat-main-input-wrap">
+        <h3>Find Chat</h3>
+        <input type="text" placeholder="Find by userId" />
+        <div class="find-chat-find-btn-wrap">
+            <button class="find-chat-find-btn">Find</button>
+        </div>
+   </div>
+   
+
+    <div class="chat-window-wrap">
+        <div class="chat-main-row">
+            <div class="chat-messages">
+                <div class="chat-message-item">
+                    <div class="chat-message-user-info-row">
+                        <div class="chat-message-date">12:31 23.03.1989</div>
+                        <div class="chat-message-user-from">from user</div>
+                        <div class="chat-message-user-from">to user</div>
+                    </div>
+                    <div class="chat-message-text">
+                        text
+                    </div>
+                </div>
+                <div class="chat-message-item">
+                    <div class="chat-message-user-info-row">
+                        <div class="chat-message-date">12:31 23.03.1989</div>
+                        <div class="chat-message-user-from">from user</div>
+                        <div class="chat-message-user-from">to user</div>
+                    </div>
+                    <div class="chat-message-text">
+                        text
+                    </div>
+                </div>
+                <div class="chat-message-item">
+                    <div class="chat-message-user-info-row">
+                        <div class="chat-message-date">12:31 23.03.1989</div>
+                        <div class="chat-message-user-from">from user</div>
+                        <div class="chat-message-user-from">to user</div>
+                    </div>
+                    <div class="chat-message-text">
+                        text
+                    </div>
+                </div>
+                <div class="chat-message-item">
+                    <div class="chat-message-user-info-row">
+                        <div class="chat-message-date">12:31 23.03.1989</div>
+                        <div class="chat-message-user-from">from user</div>
+                        <div class="chat-message-user-from">to user</div>
+                    </div>
+                    <div class="chat-message-text">
+                        text
+                    </div>
+                </div>
+            </div>
+            <div class="users-column">
+                <div class="user-item-wrap">
+                    1
+                </div>
+                <div class="user-item-wrap">
+                    1
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-keyboard-row">
+            <div class="chat-keyboard"><textarea></textarea></div>
+            <div class="chat-send-btn-wrap"><button class="chat-send-btn">Send message</button></div>
+        </div>
+    </div>
+
+</div>
+
+<%- include('./includes/footer.ejs') %>
