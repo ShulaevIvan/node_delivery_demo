@@ -15,7 +15,7 @@ router.get('/get-avalible-users', isAuthenticated, async (req, res) => {
 
 router.post('/create', async (req, res) => {
     const { currentUser, reciver } = req.body;
-    
+    const users = new Array().push(currentUser, reciver);
     res.status(201).json({status: 'ok'});
 });
 
