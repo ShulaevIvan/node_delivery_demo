@@ -14,9 +14,15 @@ router.get('/get-avalible-users', isAuthenticated, async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-    const { currentUser, reciver } = req.body;
-    const users = new Array().push(currentUser, reciver);
-    res.status(201).json({status: 'ok'});
+    const { users } = req.body;
+    if (!users || users.length < 2) {
+        return req.status(200).json({status: 'err'});
+    }
+    await ChatModule.createChat(users)
+    .then((data) => {
+        res.status(201).json({status: 'ok', chat: data});
+    })
+    
 });
 
 module.exports = router;

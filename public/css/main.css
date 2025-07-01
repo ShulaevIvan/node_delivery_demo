@@ -75,6 +75,16 @@
     align-items: center;
     width: 30%;
 }
+.create-chat-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.create-chat-wrap input {
+    max-width: 150px;
+    margin-bottom: 10px;
+}
 .chat-hidden {
     visibility: hidden;
 }

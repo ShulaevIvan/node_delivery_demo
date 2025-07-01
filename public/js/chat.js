@@ -6,6 +6,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const keyboard = chatWrap.querySelector('.chat-keyboard');
     const sendBtn = chatWrap.querySelector('.chat-send-btn');
     const findChatBtn = chatWrap.querySelector('.find-chat-find-btn');
+    const createChatBtn = chatWrap.querySelector('.create-chat-btn');
+    const createChatInput = chatWrap.querySelector('.create-chat-main-input');
     const currentUserData = {
         userId: chatWrap.querySelector('.current-user-id').textContent,
         email: chatWrap.querySelector('.current-user-email').textContent,
@@ -38,12 +40,17 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    const createChat = async (currentUser, reciver) => {
-        if (!currentUser || !reciver) return;
-        
+    const createChat = async (currentUser) => {
+        const reciverUserId = createChatInput.value;
+        console.log(currentUser, reciverUserId)
+        if (!currentUser || !reciverUserId) {
+            createChatInput.value = '';
+            return;
+        }
         const chatData = {
-            users: [].push(currentUser, reciver)
+            users: [currentUser, reciverUserId]
         };
+        console.log(currentUser)
         await fetch(`${server}/api/chat/create`, {
             method: 'POST',
             body: JSON.stringify(chatData),
@@ -57,18 +64,17 @@ window.addEventListener('DOMContentLoaded', () => {
         })
     };
 
-    const findChatHandler = async () => {
+    const createChatHandler = async () => {
         if (!currentUserData.userId) return;
-        await createChat(currentUserData.userId, 2);
-        console.log('test312');
-        console.log(currentUserData);
+        await createChat(currentUserData.userId);
     };
+    
 
     const sendMessageHandler = async () => {
 
     };
 
-    findChatBtn.addEventListener('click', findChatHandler);
+    createChatBtn.addEventListener('click', createChatHandler);
     sendBtn.addEventListener('click', sendMessageHandler);
     getAvalibleUsers();
 });
