@@ -15,7 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
         sendData.password = passwordInput.value;
         sendData.name = nameInput.value;
         sendData.contactPhone = phoneInput.value;
-        console.log(JSON.stringify(sendData))
 
         await fetch(`${registerUrl}`, {
             method: 'POST',

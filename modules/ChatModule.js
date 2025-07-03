@@ -7,12 +7,62 @@ class ChatModule {
 
     }
 
-    find(users) {
+    async find(usersIdsArr) {
+        try {
+            if (!usersIdsArr && usersIdsArr.length < 2) return;
+            const sendUserId = usersIdsArr[0];
+            const reciveUserId = usersIdsArr[1];
+            
+           return await chatCollection.find().populate('users', sendUserId).populate('users', reciveUserId)
+           .then((targetChat) => {
+                if (!targetChat && targetChat.length < 1) return null
+                return targetChat;
+            });
+        }
+        catch(err) {
 
+        }
     }
 
-    sendMessage() {
+    async findChatByUserId(userId) {
+        return await chatCollection.find().populate('users', userId)
+        .then((targetChat) => {
+            return targetChat;
+        })
+    }
 
+    async sendMessage(author, reciver, message) {
+        try {
+
+        }
+        catch(err) {
+
+        }
+    };
+
+    async createChat(users) {
+        try {
+            await this.find(users)
+            .then((existingChat) => {
+                if (existingChat && existingChat.length > 0) {
+                    console.log('test222')
+                    return existingChat;
+                }
+                chatCollection.create({
+                    users: users,
+                    createdAt: new Date(),
+                    messages: [],
+                })
+                .then((createdChat) => {
+                    console.log(createdChat)
+                    return createdChat;
+                });
+            });
+            
+        }
+        catch(err) {
+            return [];
+        }
     }
 
     subscribe() {
@@ -21,33 +71,6 @@ class ChatModule {
 
     getHistory() {
 
-    }
-
-    async createChat(users) {
-        try {
-            return new Promise((resolve, reject) => {
-                chatCollection.find({users: users})
-                .then((targetChat) => {
-                    if (targetChat && targetChat.length > 0) {
-                        resolve(targetChat[0]);
-                    }
-                    chatCollection.create({
-                        users: users,
-                        createdAt: new Date(),
-                        messages: []
-                    })
-                    .then((createdChat) => {
-                        resolve(createdChat);
-                    })
-                })
-                .catch((err) => {
-                    reject({err: err});
-                })
-            })
-        }
-        catch(err) {
-            return [];
-        }
     }
 
     async getAvalibleUsers() {
