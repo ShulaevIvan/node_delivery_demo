@@ -12,6 +12,7 @@
    <div class="avalible-users">
         <h3>Avalible Users (id):</h3>
         <ul class="other-users">
+            <li>Your ID : <%= user.userId %></li>
         </ul>
     
    </div>
@@ -33,7 +34,7 @@
    </div>
    
 
-    <div class="chat-window-wrap">
+    <div class="chat-window-wrap chat-hidden">
         <div class="chat-main-row">
             <div class="chat-messages">
                 <div class="chat-message-item">
@@ -77,18 +78,10 @@
                     </div>
                 </div>
             </div>
-            <div class="users-column">
-                <div class="user-item-wrap">
-                    1
-                </div>
-                <div class="user-item-wrap">
-                    1
-                </div>
-            </div>
         </div>
         
         <div class="chat-keyboard-row">
-            <div class="chat-keyboard"><textarea></textarea></div>
+            <div class="chat-keyboard"><textarea class="chat-input"></textarea></div>
             <div class="chat-send-btn-wrap"><button class="chat-send-btn">Send message</button></div>
         </div>
     </div>

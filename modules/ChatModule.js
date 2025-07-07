@@ -33,7 +33,7 @@ class ChatModule {
 
     async sendMessage(author, reciver, message) {
         try {
-
+            console.log('test');
         }
         catch(err) {
 

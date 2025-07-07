@@ -4,11 +4,13 @@ window.addEventListener('DOMContentLoaded', () => {
     const chatWrap = document.querySelector('.chat-wrap');
     const otherUsersWrap = chatWrap.querySelector('.other-users');
     const keyboard = chatWrap.querySelector('.chat-keyboard');
+    const keyboardInput = keyboard.querySelector('.chat-input');
     const sendBtn = chatWrap.querySelector('.chat-send-btn');
     const findChatBtn = chatWrap.querySelector('.find-chat-find-btn');
     const createChatBtn = chatWrap.querySelector('.create-chat-btn');
     const createChatInput = chatWrap.querySelector('.create-chat-main-input');
     const findChatInput = chatWrap.querySelector('.find-chat-input');
+    const chatWindow = chatWrap.querySelector('.chat-window-wrap');
 
     const currentUserData = {
         userId: chatWrap.querySelector('.current-user-id').textContent,
@@ -61,27 +63,35 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!currentUserData.userId) return;
         await createChat(currentUserData.userId);
     };
-    
+
+    const showHideChat = () => {
+        if (chatWindow.classList.contains('chat-hidden')) {
+            chatWindow.classList.remove('chat-hidden');
+            return;
+        }
+        chatWindow.classList.add('chat-hidden');
+    };
 
     const sendMessageHandler = async (e, reciveUser) => {
-        const senderId = currentUserData.userId;
-        const reciverId = reciveUser;
-        const chatData = {
-            sender: senderId,
-            reciver: reciverId,
-            message: '',
-        };
-        await fetch(`${server}/api/chat/send-message`, {
-            method: 'POST',
-            body: JSON.stringify(chatData),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-        })
+        console.log(keyboardInput.value)
+        // const senderId = currentUserData.userId;
+        // const reciverId = reciveUser;
+        // const chatData = {
+        //     sender: senderId,
+        //     reciver: reciverId,
+        //     message: '',
+        // };
+        // await fetch(`${server}/api/chat/send-message`, {
+        //     method: 'POST',
+        //     body: JSON.stringify(chatData),
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     }
+        // })
+        // .then((response) => response.json())
+        // .then((data) => {
+        //     console.log(data);
+        // })
     };
 
     createChatBtn.addEventListener('click', createChatHandler);
@@ -101,11 +111,12 @@ window.addEventListener('DOMContentLoaded', () => {
         .then((usersData) => {
             const createOtherUser = (userId) => {
                 const userLi = document.createElement('li');
-                const sendMessageBtn = document.createElement('button');
-                sendMessageBtn.textContent = 'send message';
+                const openChatBtn = document.createElement('button');
+                openChatBtn.textContent = 'open chat';
+                openChatBtn.classList.add('send-msg-to-user-btn');
                 userLi.textContent = `${userId} `;
-                sendMessageBtn.addEventListener('click', (e) => sendMessageHandler(e, userId));
-                userLi.appendChild(sendMessageBtn);
+                openChatBtn.addEventListener('click', showHideChat);
+                userLi.appendChild(openChatBtn);
                 otherUsersWrap.appendChild(userLi);
             };
             usersData.userList.filter((user) => user._id !== currentUserData.userId).forEach((item) => {
