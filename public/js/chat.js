@@ -20,10 +20,14 @@ window.addEventListener('DOMContentLoaded', () => {
         wsServer: chatWrap.querySelector('.ws-server-url').textContent
     };
 
+    const sendMessageState = {
+        fromUser: '',
+        toUser: '',
+        message: '',
+    };
+
     const server = `${currentUserData.wsServer}`;
     const socket = io().connect('/chat');
-    
-    
 
     const createChat = async () => {
         const reciverUserId = createChatInput.value;
@@ -64,34 +68,31 @@ window.addEventListener('DOMContentLoaded', () => {
         await createChat(currentUserData.userId);
     };
 
-    const showHideChat = () => {
-        if (chatWindow.classList.contains('chat-hidden')) {
-            chatWindow.classList.remove('chat-hidden');
+    const showHideChat = (e) => {
+        if (!chatWindow.classList.contains('chat-hidden')) {
+            chatWindow.classList.add('chat-hidden');
             return;
         }
-        chatWindow.classList.add('chat-hidden');
+        const reciverUserId = e.target.closest('li').querySelector('.chat-user-id').textContent;
+        sendMessageState.fromUser = currentUserData.userId;
+        sendMessageState.toUser = reciverUserId;
+        chatWindow.classList.remove('chat-hidden');
     };
 
-    const sendMessageHandler = async (e, reciveUser) => {
-        console.log(keyboardInput.value)
-        // const senderId = currentUserData.userId;
-        // const reciverId = reciveUser;
-        // const chatData = {
-        //     sender: senderId,
-        //     reciver: reciverId,
-        //     message: '',
-        // };
-        // await fetch(`${server}/api/chat/send-message`, {
-        //     method: 'POST',
-        //     body: JSON.stringify(chatData),
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((data) => {
-        //     console.log(data);
-        // })
+    const sendMessageHandler = async () => {
+        const chatData = {
+            sender: sendMessageState.fromUser,
+            reciver: sendMessageState.toUser,
+            message: keyboardInput.value,
+        };
+        await fetch(`${server}/api/chat/send-message`, {
+            method: 'POST',
+            body: JSON.stringify(chatData),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => response.json());
     };
 
     createChatBtn.addEventListener('click', createChatHandler);
@@ -111,10 +112,13 @@ window.addEventListener('DOMContentLoaded', () => {
         .then((usersData) => {
             const createOtherUser = (userId) => {
                 const userLi = document.createElement('li');
+                const userIdSpan = document.createElement('span');
                 const openChatBtn = document.createElement('button');
                 openChatBtn.textContent = 'open chat';
                 openChatBtn.classList.add('send-msg-to-user-btn');
-                userLi.textContent = `${userId} `;
+                userIdSpan.classList.add('chat-user-id');
+                userIdSpan.textContent = `${userId}`;
+                userLi.appendChild(userIdSpan);
                 openChatBtn.addEventListener('click', showHideChat);
                 userLi.appendChild(openChatBtn);
                 otherUsersWrap.appendChild(userLi);

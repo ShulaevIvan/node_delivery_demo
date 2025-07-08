@@ -50,7 +50,7 @@ database();
 io.engine.use(sessionMiddleware);
 io.on("connection", (socket) => {
 	const currentUserId = socket.request.session.passport;
-    console.log(socket.request.session.passport)
+    // console.log(socket.request.session.passport)
     io.on('disconnect', (socket) => {
         console.log('test')
     })

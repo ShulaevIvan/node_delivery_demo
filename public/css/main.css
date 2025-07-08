@@ -91,3 +91,6 @@
 .chat-hidden {
     visibility: hidden;
 }
+.other-users li {
+    margin-bottom: 20px;
+}
