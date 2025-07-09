@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
+const EventEmitter = require('node:events');
 const userCollection = require('../database/models/User');
 const chatCollection = require('../database/models/Chat');
 const messageCollection = require('../database/models/Message');
 
+
 class ChatModule {
     constructor() {
-
+        this.chatEmmiter = new EventEmitter();
     }
 
     async find(usersIdsArr) {
         try {
             if (!usersIdsArr && usersIdsArr.length < 2) return;
-            let targetChat = await chatCollection.find({users: { $all: usersIdsArr }});
-            if (targetChat && targetChat.length < 1) {
+            let targetChat = await chatCollection.findOne({users: { $all: usersIdsArr }});
+            if (!targetChat) {
                 targetChat = await this.createChat(usersIdsArr);
             }
             return targetChat;
@@ -36,7 +38,8 @@ class ChatModule {
                 createdAt: new Date(),
                 messages: [],
             });
-            return await createdChat.save();
+            await createdChat.save();
+            return createdChat;
         }
         catch(err) {
             return [];
@@ -51,17 +54,8 @@ class ChatModule {
 			readAt: "",
 		});
         await newMessage.save();
-        if (chat) {
-            await chatCollection.updateOne({_id: chat[0]._id}, {
-                $push: {
-                    messages: [newMessage]
-                }
-            });
-            console.log('test');
-            return newMessage;
-        }
-        await chatCollection.updateOne({_id: chat[0]._id}, {
-            $set: {
+        await chatCollection.updateOne({_id: chat._id}, {
+            $push: {
                 messages: [newMessage]
             }
         });
@@ -77,20 +71,32 @@ class ChatModule {
             const users = await userCollection.find({'_id': {$in: [senderUser, reciverUser]}}).select('_id').exec();
             const chat = await this.find([users[0]._id, users[1]._id]);
             const message = await this.saveMessageToChat(chat, senderUser, messageText);
+            await this.getHistory(chat._id);
+            this.chatEmmiter.emit('newMessage', { chat, message});
+            
             return message;
+        }
+        catch(err) {
+            console.log(err)
+        }
+    };
+
+    subscribe(callback) {
+        this.chatEmmiter.on('newMessage', ({ chat, message}) => {
+            callback({ chatId: chat._id, message });
+        });
+    };
+
+    async getHistory(chatId) {
+        try {
+            const messages = await chatCollection.findOne({'_id': chatId}).populate('messages');
+
+            return messages;
         }
         catch(err) {
 
         }
     };
-
-    subscribe() {
-
-    }
-
-    getHistory() {
-
-    }
 
     async getAvalibleUsers() {
         try {

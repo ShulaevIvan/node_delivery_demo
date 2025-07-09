@@ -95,12 +95,6 @@ window.addEventListener('DOMContentLoaded', () => {
         .then((response) => response.json());
     };
 
-    createChatBtn.addEventListener('click', createChatHandler);
-    sendBtn.addEventListener('click', sendMessageHandler);
-    findChatBtn.addEventListener('click', findChatHandler);
-    getAvalibleUsers();
-
-
     async function getAvalibleUsers() {
         await fetch(`${server}/api/chat/get-avalible-users`, {
             method: 'get',
@@ -128,4 +122,9 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         });
     };
+
+    createChatBtn.addEventListener('click', createChatHandler);
+    sendBtn.addEventListener('click', sendMessageHandler);
+    findChatBtn.addEventListener('click', findChatHandler);
+    getAvalibleUsers();
 });
