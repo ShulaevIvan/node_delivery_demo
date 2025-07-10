@@ -94,3 +94,13 @@
 .other-users li {
     margin-bottom: 20px;
 }
+.avalible-users {
+    margin-bottom: 40px;
+}
+.chat-func-demo-wrap {
+    margin-bottom: 40px;
+}
+.get-history-demo-wrap,
+.send-message-demo-wrap {
+    margin-bottom: 20px;
+}

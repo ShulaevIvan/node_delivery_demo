@@ -6,11 +6,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const keyboard = chatWrap.querySelector('.chat-keyboard');
     const keyboardInput = keyboard.querySelector('.chat-input');
     const sendBtn = chatWrap.querySelector('.chat-send-btn');
-    const findChatBtn = chatWrap.querySelector('.find-chat-find-btn');
-    const createChatBtn = chatWrap.querySelector('.create-chat-btn');
-    const createChatInput = chatWrap.querySelector('.create-chat-main-input');
-    const findChatInput = chatWrap.querySelector('.find-chat-input');
     const chatWindow = chatWrap.querySelector('.chat-window-wrap');
+    const chatMessagesWrap = chatWrap.querySelector('.chat-messages');
+    const getHistoryBtn = chatWrap.querySelector('.get-history');
 
     const currentUserData = {
         userId: chatWrap.querySelector('.current-user-id').textContent,
@@ -29,54 +27,17 @@ window.addEventListener('DOMContentLoaded', () => {
     const server = `${currentUserData.wsServer}`;
     const socket = io().connect('/chat');
 
-    const createChat = async () => {
-        const reciverUserId = createChatInput.value;
-        if (!currentUserData.userId || !reciverUserId) {
-            createChatInput.value = '';
-            return;
-        }
-        const chatData = {
-            users: [currentUserData.userId, reciverUserId]
-        };
-        await fetch(`${server}/api/chat/create`, {
-            method: 'POST',
-            body: JSON.stringify(chatData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json());
-    };
-
-    const findChatHandler = async () => {
-        const reciverUserId = findChatInput.value;
-        const chatData = {
-            users: [currentUserData.userId, reciverUserId],
-        };
-        await fetch(`${server}/api/chat/find`, {
-            method: 'POST',
-            body: JSON.stringify(chatData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json());
-    };
-
-    const createChatHandler = async () => {
-        if (!currentUserData.userId) return;
-        await createChat(currentUserData.userId);
-    };
-
-    const showHideChat = (e) => {
+    const showHideChat = async (e) => {
         if (!chatWindow.classList.contains('chat-hidden')) {
             chatWindow.classList.add('chat-hidden');
             return;
         }
+        clearChat();
         const reciverUserId = e.target.closest('li').querySelector('.chat-user-id').textContent;
         sendMessageState.fromUser = currentUserData.userId;
         sendMessageState.toUser = reciverUserId;
         chatWindow.classList.remove('chat-hidden');
+        await findChatByUsers(currentUserData.userId, reciverUserId);
     };
 
     const sendMessageHandler = async () => {
@@ -92,12 +53,69 @@ window.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/json',
             }
         })
-        .then((response) => response.json());
+        .then((response) => response.json())
+        .then(() => {
+            socket.emit('newMessage', keyboardInput.value);
+        });
     };
+
+
+    async function findChatByUsers(senderUserId, reciverUserId) {
+        return await fetch(`${server}/api/chat/users-chat-messages`, {
+            method: 'POST',
+            body: JSON.stringify({users: [senderUserId, reciverUserId]}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((chatData) => {
+            loadChatMessages(chatData.messages);
+        });
+    };
+
+    function loadChatMessages(messagesArr) {
+        if (!messagesArr || messagesArr.length < 1) return;
+
+        messagesArr.forEach((messageObj) => {
+            createMessageItem(messageObj);
+        });
+    };
+
+    function createMessageItem(messageData) {
+        const messageWrap = document.createElement('div');
+        const messageRow = document.createElement('div');
+        const messageDate = document.createElement('div');
+        const messageFrom = document.createElement('div');
+        const messageText = document.createElement('div');
+        messageWrap.classList.add('chat-message-item');
+        messageRow.classList.add('chat-message-user-info-row');
+        messageDate.classList.add('chat-message-date');
+        messageFrom.classList.add('chat-message-user-from');
+        messageText.classList.add('chat-message-text');
+        messageDate.textContent = messageData.sentAt;
+        messageFrom.textContent = messageData.author;
+        messageText.textContent = messageData.text;
+
+        messageRow.appendChild(messageDate)
+        messageRow.appendChild(messageFrom)
+        messageWrap.appendChild(messageRow);
+        messageWrap.appendChild(messageText);
+
+        chatMessagesWrap.appendChild(messageWrap);
+    };
+
+    function clearChat() {
+        const messages = chatMessagesWrap.querySelectorAll('.chat-message-item');
+        keyboardInput.value = '';
+        keyboardInput.placeholder = 'enter text';
+        if (!messages || messages.length === 0) return;
+        messages.forEach((item) => item.remove());
+    }
 
     async function getAvalibleUsers() {
         await fetch(`${server}/api/chat/get-avalible-users`, {
-            method: 'get',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -123,8 +141,10 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    createChatBtn.addEventListener('click', createChatHandler);
     sendBtn.addEventListener('click', sendMessageHandler);
-    findChatBtn.addEventListener('click', findChatHandler);
     getAvalibleUsers();
+
+    socket.on('getHistory', (messages) => {
+        loadChatMessages(messages);
+    })
 });

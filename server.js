@@ -14,6 +14,7 @@ const database = require('./database/database');
 const mainRouter = require('./routes/mainRouter');
 const apiRouter = require('./routes/apiRouter');
 const chatRouter = require('./routes/chatRouter');
+const initSocket = require('./ws/socketHandler');
 
 const sessionMiddleware = session({
     secret: 'test123',
@@ -48,10 +49,4 @@ server.listen(PORT, () => {
 database();
 
 io.engine.use(sessionMiddleware);
-io.on("connection", (socket) => {
-	const currentUserId = socket.request.session.passport;
-    // console.log(socket.request.session.passport)
-    io.on('disconnect', (socket) => {
-        console.log('test')
-    })
-});
+initSocket(io);

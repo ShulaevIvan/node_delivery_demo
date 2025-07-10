@@ -25,11 +25,18 @@ class ChatModule {
     }
 
     async findChatByUserId(userId) {
-        return await chatCollection.find().populate('users', userId)
-        .then((targetChat) => {
-            return targetChat;
-        })
+        const chat = await chatCollection.findOne().populate('users', userId);
+        if (chat) {
+            return chat._id;
+        }
+        return {};
     }
+
+    async findMessagesByUsers(users) {
+        const chat = await this.find(users);
+        const messages = await this.getHistory(chat._id)
+        return messages
+    };
 
     async createChat(users) {
         try {
@@ -89,8 +96,8 @@ class ChatModule {
 
     async getHistory(chatId) {
         try {
-            const messages = await chatCollection.findOne({'_id': chatId}).populate('messages');
-
+            const targetChat = await chatCollection.findOne({'_id': chatId});
+            const messages = await messageCollection.find({'_id': {$in: targetChat.messages}});
             return messages;
         }
         catch(err) {

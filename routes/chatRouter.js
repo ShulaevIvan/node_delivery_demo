@@ -28,7 +28,7 @@ router.post('/find', async (req, res) => {
     const { users } = req.body;
     await ChatModule.find(users)
     .then((data) => {
-        res.status(200).json({status: 'ok'});
+        res.status(200).json({status: 'ok', chat: data});
     });
 });
 
@@ -40,6 +40,28 @@ router.post('/send-message', async (req, res) => {
         message: message
     };
     await ChatModule.sendMessage(data);
+});
+
+router.get('/get-history', async (req, res) => {
+    const chatId = req.query.id;
+    if (!chatId) return res.status(200).json({status: 'ok', data: []});
+    const messages = await ChatModule.getHistory(chatId);
+
+    res.status(200).json({status: 'ok', data: messages});
+});
+
+router.post('/find-chat', async (req, res) => {
+    const { userId } = req.body;
+    if (!userId) return res.status(201).json({status: 'ok', chatId: ''});
+    const chatId = await ChatModule.findChatByUserId(userId);
+    res.status(201).json({status: 'ok', chatId: chatId});
+});
+
+router.post('/users-chat-messages', async (req, res) => {
+    const { users } = req.body;
+    const messages = await ChatModule.findMessagesByUsers(users);
+
+    res.status(201).json({status: 'ok', messages: messages});
 });
 
 module.exports = router;
